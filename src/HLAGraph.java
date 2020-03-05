@@ -1895,11 +1895,11 @@ public class HLAGraph{
 	//this.interBubbleSequences = new ArrayList<StringBuffer>();
 	//this.interBubblePaths = new ArrayList<Path>();
 	
-	this.interBubblePaths2  = new ArrayList<TmpPath>();
+	this.interBubblePaths2 = new ArrayList<TmpPath>();
 
 	StringBuffer curbf = new StringBuffer("");
 	TmpPath tp = new TmpPath();
-	for(int i=0; i<typingIntervals.size(); i++){
+	for (int i = 0; i < typingIntervals.size(); i++) {
 	    int start = typingIntervals.get(i)[0];
 	    int end = typingIntervals.get(i)[1];
 	    
@@ -1915,150 +1915,154 @@ public class HLAGraph{
 	    HashMap<Integer, Node> columnHash = null;
 	    Integer[] keys = null;
 	    /* FOR EACH POSITION in a TYPING INTERVAL*/
-	    for(k=start-1;k<end-1;k++){
-		columnHash = this.nodeHashList.get(k);
-		keys = columnHash.keySet().toArray(new Integer[0]);
-		
-		/*it's a collapsing node if curBubbleLength > 2
-		  else it's a possible start of bubble.*/
-		if(keys.length == 1){
-		    //headerBubble = false;
-		    /* then it must be a collapsing node; */
-		    if(curBubbleLength > 1){
-			//this.interBubbleSequences.add(curbf);
-			//this.interBubblePaths.add(tp.toPath(this.g));
-			this.interBubblePaths2.add(tp);
-			//this.interBubblePaths.add(curP);
-			curBubbleLength++;
-			numBubbles++;
-			//numPaths.add(new Integer(this.analyzeBubble(lastStartOfBubble, k)));
-			bubbleLengths.add(new Integer(curBubbleLength-2));
-			coordinates.add(new Integer(lastStartOfBubble));
-			if(firstBubble){
-			    //if(i>0)//if it's not first interval, we need to update last bubble
-				//	bubbles.get(bubbles.size()-1).trimPaths(0,this.tailExcessLengthBeyondTypingBoundary[i-1]);
-			    bubbles.add(new Bubble(this, curSNode, columnHash.get(keys[0]), firstBubble, this.headerExcessLengthBeyondTypingBoundary[i], 0, this.headerExcessNodes[i], null));
-			    //bubbles.get(bubbles.size()-1).trimPath(this.headerExcessLengthBeyongTypingBoundary[i], 0);
-			    firstBubble = false;
-			}else
-			    bubbles.add(new Bubble(this, curSNode, columnHash.get(keys[0])));
-			curSNode = columnHash.get(keys[0]);
-			//preNode = curSNode;
-			lastStartOfBubble = k;
-			curBubbleLength = 1;
-			//curP = new Path();
-			curbf = new StringBuffer("");
-			curbf.append(curSNode.getBase());
-			tp = new TmpPath();
-			tp.appendNode(curSNode);
-		    }
-		    /* Possible Start of a Bubble or straight path */
-		    else{
-			curSNode = columnHash.get(keys[0]);
-			curbf.append(curSNode.getBase());
-			tp.appendNode(curSNode); 
-			/*if(prNode == null)
-			    preNode = curSNode;
-			else{
-			    curP.appendEdge(this.g.getEdge(preNode, curSNode));
-			    preNode = curSNode;
-			    }*/
-			lastStartOfBubble = k;
-			curBubbleLength = 1;
-		    }
-		}else if(keys.length > 1){//middle of bubble
-		    
-		    /* NEED TO FIX THIS TO ALLOW BUBBLE TO BE USED at the boundaries*/
-		    if(k==(start-1)){// || headerBubble){
-			
-			Node[] ns = new Node[columnHash.size()];
-			for(int intg=0; intg<keys.length; intg++)
-			    ns[intg] = columnHash.get(keys[intg]);
-			
-			    
-			HLA.log.appendln("[k] = " + k);
-			int tmpBubbleLength = 1;
-			for(int l=start-2;;l--){
-			    HLA.log.appendln("trying new k: [k] = " + l);
-			    tmpBubbleLength++;
-			    HashMap<Integer, Node> tmpHash = this.nodeHashList.get(l);
-			    Integer[] tmpKeys = tmpHash.keySet().toArray(new Integer[0]);
-			    for(Integer itg: tmpKeys){
-				HLA.log.appendln("BASE:\t" + tmpHash.get(itg).toString());
-			    }
-			    if(tmpKeys.length == 1){
-				HLA.log.appendln("Found the new start!");
-				curSNode = tmpHash.get(tmpKeys[0]);
-				curbf.append(curSNode.getBase());// this is actually unecessary
-				//curbf=new StringBuffer("");
+	    for (k = start-1; k < end-1; k++) {
+			columnHash = this.nodeHashList.get(k);
+			keys = columnHash.keySet().toArray(new Integer[0]);
+
+			/*it's a collapsing node if curBubbleLength > 2
+			  else it's a possible start of bubble.*/
+			if (keys.length == 1) {
+				//headerBubble = false;
+				/* then it must be a collapsing node; */
+				if (curBubbleLength > 1) {
+					//this.interBubbleSequences.add(curbf);
+					//this.interBubblePaths.add(tp.toPath(this.g));
+					this.interBubblePaths2.add(tp);
+					//this.interBubblePaths.add(curP);
+					curBubbleLength++;
+					numBubbles++;
+					//numPaths.add(new Integer(this.analyzeBubble(lastStartOfBubble, k)));
+					bubbleLengths.add(new Integer(curBubbleLength - 2));
+					coordinates.add(new Integer(lastStartOfBubble));
+					if (firstBubble) {
+						//if(i>0)//if it's not first interval, we need to update last bubble
+						//	bubbles.get(bubbles.size()-1).trimPaths(0,this.tailExcessLengthBeyondTypingBoundary[i-1]);
+						bubbles.add(new Bubble(this, curSNode, columnHash.get(keys[0]), firstBubble, this.headerExcessLengthBeyondTypingBoundary[i], 0, this.headerExcessNodes[i], null));
+						//bubbles.get(bubbles.size()-1).trimPath(this.headerExcessLengthBeyongTypingBoundary[i], 0);
+						firstBubble = false;
+					} else {
+						bubbles.add(new Bubble(this, curSNode, columnHash.get(keys[0])));
+					}
+					curSNode = columnHash.get(keys[0]);
+					//preNode = curSNode;
+					lastStartOfBubble = k;
+					curBubbleLength = 1;
+					//curP = new Path();
+					curbf = new StringBuffer("");
+					curbf.append(curSNode.getBase());
+					tp = new TmpPath();
+					tp.appendNode(curSNode);
+				}
+				/* Possible Start of a Bubble or straight path */
+				else {
+					curSNode = columnHash.get(keys[0]);
+					curbf.append(curSNode.getBase());
+					tp.appendNode(curSNode);
+					/*if(prNode == null)
+						preNode = curSNode;
+					else{
+						curP.appendEdge(this.g.getEdge(preNode, curSNode));
+						preNode = curSNode;
+						}*/
+					lastStartOfBubble = k;
+					curBubbleLength = 1;
+				}
+			} else if (keys.length > 1) {//middle of bubble
+
+				/* NEED TO FIX THIS TO ALLOW BUBBLE TO BE USED at the boundaries*/
+				if (k == (start - 1)) {// || headerBubble){
+
+				Node[] ns = new Node[columnHash.size()];
+				for (int intg = 0; intg < keys.length; intg++) {
+					ns[intg] = columnHash.get(keys[intg]);
+				}
+
+				HLA.log.appendln("[k] = " + k);
+				int tmpBubbleLength = 1;
+				for (int l = start - 2;;l--) {
+						HLA.log.appendln("trying new k: [k] = " + l);
+						tmpBubbleLength++;
+						HashMap<Integer, Node> tmpHash = this.nodeHashList.get(l);
+						Integer[] tmpKeys = tmpHash.keySet().toArray(new Integer[0]);
+						for (Integer itg: tmpKeys) {
+							HLA.log.appendln("BASE:\t" + tmpHash.get(itg).toString());
+						}
+						if (tmpKeys.length == 1) {
+						HLA.log.appendln("Found the new start!");
+						curSNode = tmpHash.get(tmpKeys[0]);
+						curbf.append(curSNode.getBase());// this is actually unecessary
+						//curbf=new StringBuffer("");
+						tp.appendNode(curSNode);
+						lastStartOfBubble = l;
+						curBubbleLength = tmpBubbleLength;
+						this.headerExcessLengthBeyondTypingBoundary[i] = curBubbleLength - 1;
+						this.headerExcessNodes[i] = ns;
+						HLA.log.appendln("Setting Trimming length(header):\t" + this.headerExcessLengthBeyondTypingBoundary[i]);
+						break;
+					}
+				}
+				//this.interBubbleSequences.add(new StringBuffer(""));
+				//headerBubble = true;
+				/*curSNode = columnHash.get(keys[0]);
+				curbf.append(curSNode.getBase());
 				tp.appendNode(curSNode);
-				lastStartOfBubble = l;
-				curBubbleLength = tmpBubbleLength;
-				this.headerExcessLengthBeyondTypingBoundary[i] = curBubbleLength - 1;
-				this.headerExcessNodes[i] = ns;
-				HLA.log.appendln("Setting Trimming length(header):\t" + this.headerExcessLengthBeyondTypingBoundary[i]);
-				break;
-			    }
+				lastStartOfBubble = k;
+				curBubbleLength = 1;
+				*/
+				} else { //mid-bubble: just increment bubble length
+					curBubbleLength++;
+					//preNode = null;
+				}
+			} else {
+				//disconnected graph.
+				HLA.log.appendln("Disconnected Graph. Probably due to not enough coverage to fully assemble or check for any biases in sequencing libraries used.");
+				return null;//skipping this gene
 			}
-			//this.interBubbleSequences.add(new StringBuffer(""));
-			//headerBubble = true;
-			/*curSNode = columnHash.get(keys[0]);
-			curbf.append(curSNode.getBase());
-			tp.appendNode(curSNode);
-			lastStartOfBubble = k;
-			curBubbleLength = 1;
-			*/
-		    }else{ //mid-bubble: just increment bubble length
-			curBubbleLength++;
-			//preNode = null;
-		    }
-		}else{//disconnected graph.
-		    HLA.log.appendln("Disconnected Graph. Probably due to not enough coverage to fully assemble or check for any biases in sequencing libraries used.");
-		    return null;//skipping this gene
-		}
 	    }
-	    //need to update here to handle "End-Bubble" (bubble sitting at the end and not concluded)
-	    if(curBubbleLength > 1){
-		Node[] ns = new Node[columnHash.size()];
-		for(int intg=0; intg<keys.length; intg++)
-		    ns[intg] = columnHash.get(keys[intg]);
-		if(HLA.DEBUG)
-		    HLA.log.appendln(">>>>>>>Bubble at the end:\t[curBubbleLength]:"+ curBubbleLength);
-		int preLength = curBubbleLength;
-		
-		for(;;k++){
-		    columnHash = this.nodeHashList.get(k);
-		    keys = columnHash.keySet().toArray(new Integer[0]);
-		    curBubbleLength++;
-		    if(keys.length == 1){
-			//this.interBubbleSequences.add(curbf);
-			//this.interBubblePaths.add(tp.toPath(this.g));
-			this.interBubblePaths2.add(tp);
-			if(HLA.DEBUG)
-			    HLA.log.appendln("Found the new end!");
-			numBubbles++;
-			bubbleLengths.add(new Integer(curBubbleLength-2));
-			coordinates.add(new Integer(lastStartOfBubble));
-			//if(firstBubble){
-			//   bubbles.add(new Bubble(this, curSNode, columnHash.get(keys[0]), firstBubble));
-			//    firstBubble = false;
-			//}else
-			this.tailExcessLengthBeyondTypingBoundary[i] = curBubbleLength - preLength;
-			this.tailExcessNodes[i] = ns;
-			if(HLA.DEBUG)
-			    HLA.log.appendln("Setting Trimming length(tail):\t" + this.tailExcessLengthBeyondTypingBoundary[i]);
-			bubbles.add(new Bubble(this, curSNode, columnHash.get(keys[0]), false, 0, this.tailExcessLengthBeyondTypingBoundary[i], null, this.tailExcessNodes[i]));
-			curSNode = columnHash.get(keys[0]);
-			lastStartOfBubble = k;
-			curBubbleLength = 1;
-			curbf = new StringBuffer("");
-			curbf.append(curSNode.getBase());
-			tp = new TmpPath();
-			tp.appendNode(curSNode);
-			
-			break;
-		    }
-		}
+			//need to update here to handle "End-Bubble" (bubble sitting at the end and not concluded)
+		if (curBubbleLength > 1) {
+			Node[] ns = new Node[columnHash.size()];
+			for (int intg=0; intg<keys.length; intg++)
+				ns[intg] = columnHash.get(keys[intg]);
+			if (HLA.DEBUG)
+				HLA.log.appendln(">>>>>>>Bubble at the end:\t[curBubbleLength]:"+ curBubbleLength);
+			int preLength = curBubbleLength;
+
+			for (;;k++) {
+				columnHash = this.nodeHashList.get(k);
+				keys = columnHash.keySet().toArray(new Integer[0]);
+				curBubbleLength++;
+				if (keys.length == 1) {
+					//this.interBubbleSequences.add(curbf);
+					//this.interBubblePaths.add(tp.toPath(this.g));
+					this.interBubblePaths2.add(tp);
+					if (HLA.DEBUG) {
+						HLA.log.appendln("Found the new end!");
+					}
+					numBubbles++;
+					bubbleLengths.add(new Integer(curBubbleLength-2));
+					coordinates.add(new Integer(lastStartOfBubble));
+					//if(firstBubble){
+					//   bubbles.add(new Bubble(this, curSNode, columnHash.get(keys[0]), firstBubble));
+					//    firstBubble = false;
+					//}else
+					this.tailExcessLengthBeyondTypingBoundary[i] = curBubbleLength - preLength;
+					this.tailExcessNodes[i] = ns;
+					if(HLA.DEBUG) {
+						HLA.log.appendln("Setting Trimming length(tail):\t" + this.tailExcessLengthBeyondTypingBoundary[i]);
+					}
+					bubbles.add(new Bubble(this, curSNode, columnHash.get(keys[0]), false, 0, this.tailExcessLengthBeyondTypingBoundary[i], null, this.tailExcessNodes[i]));
+					curSNode = columnHash.get(keys[0]);
+					lastStartOfBubble = k;
+					curBubbleLength = 1;
+					curbf = new StringBuffer("");
+					curbf.append(curSNode.getBase());
+					tp = new TmpPath();
+					tp.appendNode(curSNode);
+
+					break;
+				}
+			}
 	    }//else{
 	    //this.interBubbleSequences.add(curbf);
 	    //this.interBubblePaths.add(tp.toPath(this.g));
@@ -2078,14 +2082,14 @@ public class HLAGraph{
 	    */
 	}
 	HLA.log.appendln("NumBubbles:\t" + numBubbles + "\tfound");
-	if(HLA.DEBUG){
+	if (HLA.DEBUG) {
 	    HLA.log.appendln("BubbleLegnths:");
-	    for(int i=0; i<bubbleLengths.size(); i++)
+	    for (int i = 0; i<bubbleLengths.size(); i++)
 		HLA.log.append(bubbleLengths.get(i).intValue() + "\t");
 	
 	    HLA.log.appendln();
 	    HLA.log.appendln("BubbleCoordinates:");
-	    for(int i=0; i<bubbleLengths.size(); i++)
+	    for (int i = 0; i < bubbleLengths.size(); i++)
 		HLA.log.append(coordinates.get(i).intValue() + "\t");
 	    
 	    HLA.log.appendln();
