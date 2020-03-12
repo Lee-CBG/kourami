@@ -56,10 +56,10 @@ public class HLA{
     
     public static double MIN_JRE_VERSION = 1.8;
 
-    public HLA(String[] hlaList, String nomGFile){
-	this.hlaName2Graph = new HashMap<String, HLAGraph>();
-	this.hlaName2typingSequences = new HashMap<String, ArrayList<HLASequence>>();
-	this.loadGraphs(hlaList, nomGFile);
+    public HLA(String[] hlaList, String nomGFile) {
+		this.hlaName2Graph = new HashMap<String, HLAGraph>();
+		this.hlaName2typingSequences = new HashMap<String, ArrayList<HLASequence>>();
+		this.loadGraphs(hlaList, nomGFile);
     }
 
     //loads HLAGraphs as well as nomG typing sequences
@@ -75,25 +75,31 @@ public class HLA{
 
 	tmpDir = HLA.MSAFILELOC;
 	
-	for(i=0; i<hlaList.length; i++){
+	for (i = 0; i < hlaList.length; i++) {
 	    HLA.log.appendln("processing HLA gene:\t" + hlaList[i]);
 	    //System.err.println("processing HLA gene:\t" + hlaList[i]);
 	    MergeMSFs mm = new MergeMSFs();
-	    if(!mm.merge(tmpDir + File.separator +  hlaList[i] + "_nuc.txt", tmpDir + File.separator + hlaList[i] + "_gen.txt", HLA.OUTPUT_MERGED_MSA)){
-		HLA.log.appendln("ERROR in MSA merging. CANNOT proceed further. Exiting..");
-		HLA.log.outToFile();
-		System.exit(-1);
+	    if (!mm.merge(tmpDir + File.separator +  hlaList[i] + "_nuc.txt", tmpDir + File.separator + hlaList[i] + "_gen.txt", HLA.OUTPUT_MERGED_MSA)) {
+			HLA.log.appendln("ERROR in MSA merging. CANNOT proceed further. Exiting..");
+			HLA.log.outToFile();
+			System.exit(-1);
 	    }
 	    
 	    this.hlaName2Graph.put(hlaList[i], new HLAGraph(mm.getListOfSequences(), hlaList[i]));
 	    ArrayList<Group> groups = nomG.getGroups(hlaList[i]);
-	    if(groups != null)
-		this.hlaName2typingSequences.put(hlaList[i], mm.formDataBase(nomG.getGroups(hlaList[i])));
-	    else
-		this.hlaName2typingSequences.put(hlaList[i], mm.formDataBaseAll());
+		if (groups != null)
+		{
+			this.hlaName2typingSequences.put(hlaList[i], mm.formDataBase(nomG.getGroups(hlaList[i])));
+		}
+		else
+		{
+			this.hlaName2typingSequences.put(hlaList[i], mm.formDataBaseAll());
+		}
 	    this.hlaName2Graph.get(hlaList[i]).setTypingSequences(this.hlaName2typingSequences.get(hlaList[i]));
-	    if(HLA.OUTPUT_MERGED_MSA)
-		this.outputTypingSequences(hlaList[i]);
+		if(HLA.OUTPUT_MERGED_MSA)
+		{
+			this.outputTypingSequences(hlaList[i]);
+		}
 	}
 	HLA.log.appendln("Done building\t" + i + "\tgraphs.");
     }
@@ -549,7 +555,7 @@ public class HLA{
 	    HLA.log.append(" " + args[i]);
 	HLA.log.appendln();
 
-	try{
+	try {
 	    System.err.println("----------------REF GRAPH CONSTRUCTION--------------");
 	    
 	    HLA.log.appendln("----------------REF GRAPH CONSTRUCTION--------------");

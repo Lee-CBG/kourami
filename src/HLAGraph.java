@@ -2727,7 +2727,7 @@ public class HLAGraph{
 	Node n = null;
 	int terminalStem = 0;
 	int unreachableStem = 0;
-	for(int i=0; i<nodes.length; i++){
+	for(int i = 0; i < nodes.length; i++) {
 	    n = nodes[i];
 	    if(!n.equals(this.sNode) && !n.equals(this.tNode) && !dNodes.contains(n)){
 		
