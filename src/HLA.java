@@ -556,42 +556,41 @@ public class HLA{
 	HLA.log.appendln();
 
 	try {
+		// Graph Construction
 	    System.err.println("----------------REF GRAPH CONSTRUCTION--------------");
-	    
 	    HLA.log.appendln("----------------REF GRAPH CONSTRUCTION--------------");
 	    HLA hla = new HLA(list, HLA.MSAFILELOC + File.separator + "hla_nom_g.txt");
 
-	    //1. bubble counting before loading reads.
+	    // Bubble counting before loading reads.
 	    //System.err.println("----------------BUBBLE COUNTING: REF GRAPH--------------");
 	    //HLA.log.appendln("----------------BUBBLE COUNTING: REF GRAPH--------------");
 	    //hla.countStems();
-	    
+		
+		// Read Alignment Loading onto Graphs
 	    System.err.println("----------------     READ LOADING     --------------");
-	    
 	    HLA.log.appendln("----------------     READ LOADING     --------------");
-	    
 	    hla.loadReads(bamfiles); 
-	    
+		
+		// Graph Cleaning
 	    System.err.println("----------------    GRAPH CLEANING    --------------");
 	    HLA.log.appendln("----------------    GRAPH CLEANING    --------------");
-	    	    	    
 	    hla.flattenInsertionNodes(list);
 	    hla.removeUnused(list);
 	    hla.removeStems(list);
 	    
-	    /*updating error prob*/
+	    // Updating error probabilities
 	    hla.updateErrorProb();
 	    
 	    hla.log.flush();
-	    
 	    StringBuffer resultBuffer = new StringBuffer();
-	    
 	    HLA.DEBUG3 = HLA.DEBUG;
 
+		// Bubble Processing and Merging
 	    hla.countBubblesAndMerge(list, resultBuffer);
-	    
+		
+		// Extract Results from the Graph
 	    hla.writeResults(resultBuffer, resultWriter);
-	}catch(Exception e){
+	} catch(Exception e) {
 	    e.printStackTrace();
 	    HLA.log.outToFile();
 	    System.exit(-1);

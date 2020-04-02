@@ -28,7 +28,7 @@ public class NomG {
 		String curline = null;
 		try {
 			br = new BufferedReader(new FileReader(nomGFile));
-			while ((curline=br.readLine()) != null) {
+			while ((curline = br.readLine()) != null) {
 				if (curline.charAt(0) != '#') {
 					//System.err.println(curline);
 					Group curgrp = new Group(curline, this);
