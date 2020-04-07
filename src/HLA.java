@@ -24,7 +24,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 
 import org.apache.commons.cli.*;
 
-public class HLA{
+public class HLA {
 
     public static boolean PRINT_G_GROUP_DB = false;
     /* graph mod stats */
@@ -62,7 +62,7 @@ public class HLA{
 		this.loadGraphs(hlaList, nomGFile);
     }
 
-    //loads HLAGraphs as well as nomG typing sequences
+    // Loads HLAGraphs as well as NomG typing sequences
     private void loadGraphs(String[] hlaList, String nomGFile){
 
 	HLA.log.appendln("Merging HLA sequences and building HLA graphs");
@@ -76,15 +76,16 @@ public class HLA{
 	tmpDir = HLA.MSAFILELOC;
 	
 	for (i = 0; i < hlaList.length; i++) {
-	    HLA.log.appendln("processing HLA gene:\t" + hlaList[i]);
+	    HLA.log.appendln("Processing HLA gene:\t" + hlaList[i]);
 	    //System.err.println("processing HLA gene:\t" + hlaList[i]);
 	    MergeMSFs mm = new MergeMSFs();
-	    if (!mm.merge(tmpDir + File.separator +  hlaList[i] + "_nuc.txt", tmpDir + File.separator + hlaList[i] + "_gen.txt", HLA.OUTPUT_MERGED_MSA)) {
+	    if (!mm.merge(tmpDir + File.separator + hlaList[i] + "_nuc.txt", tmpDir + File.separator + hlaList[i] + "_gen.txt", HLA.OUTPUT_MERGED_MSA)) {
 			HLA.log.appendln("ERROR in MSA merging. CANNOT proceed further. Exiting..");
 			HLA.log.outToFile();
 			System.exit(-1);
 	    }
-	    
+		
+		// Builds graphs out of sequence alignment files
 	    this.hlaName2Graph.put(hlaList[i], new HLAGraph(mm.getListOfSequences(), hlaList[i]));
 	    ArrayList<Group> groups = nomG.getGroups(hlaList[i]);
 		if (groups != null)
@@ -105,12 +106,11 @@ public class HLA{
     }
     
 
-
     public void outputTypingSequences(String hgn){
 	ArrayList<HLASequence> typingSeqs = this.hlaName2typingSequences.get(hgn);
 
 	BufferedWriter bw = null;
-	try{
+	try {
 	    bw = new BufferedWriter(new FileWriter(hgn + "_typingDB.fa"));
 	    for(HLASequence h : typingSeqs){
 		bw.write(Bubble.stripPadding(h.toString()));
@@ -118,7 +118,7 @@ public class HLA{
 		//bw.write();
 	    }
 	    bw.close();
-	}catch(IOException ioe){
+	} catch(IOException ioe) {
 	    ioe.printStackTrace();
 	}
     }
@@ -435,7 +435,6 @@ public class HLA{
 	    + "Usage: java -jar <PATH_TO>/Kourami.jar [options] <bam-1> ... <bam-n>\n\n"
 	    + "   -h,--help                      print this message\n";
 	
-	String footer = "\n";
 	System.err.println(header);
 	PrintWriter tmp = new PrintWriter(System.err);
 	formatter.printOptions(tmp, 80, options, 3, 3);
@@ -455,9 +454,9 @@ public class HLA{
 	System.exit(1);
     }
 
-    public static void main(String[] args) throws IOException{
+    public static void main(String[] args) throws IOException {
 	
-	if(!isVersionOrHigher()){
+	if (!isVersionOrHigher()) {
 	    System.err.println("JRE of 1.8+ is required to run Kourami. Exiting.");
 	    System.exit(1);
 	}
@@ -468,61 +467,64 @@ public class HLA{
 	String[] bams = null;
 	CommandLine line = null;
 	boolean exitRun = false;
-	try{
+	try {
 	    CommandLine helpcheck = new DefaultParser().parse(helponlyOpts, args, true);
-	    if(helpcheck.getOptions().length > 0)
-		HLA.help(options);
-	    else{
-		line = parser.parse( options, args);
-		if(line.hasOption("h"))//help"))
-		    HLA.help(options);
-		else{
-		    if(line.hasOption("a"))
-			HLA.TYPEADDITIONAL = true;
-
-		    HLA.OUTPREFIX = line.getOptionValue("o");//outfilePrefix");
-		    String tmploc = line.getOptionValue("d");//msaDirectory");
-		    HLA.MSAFILELOC = tmploc;
-		    if(tmploc.endsWith(File.separator))
-			HLA.MSAFILELOC = tmploc.substring(0,tmploc.length()-1);
-		    if(! new File(HLA.MSAFILELOC).exists() || ! new File(HLA.MSAFILELOC).isDirectory()){
-			System.err.println("Given msaDirectory: " + HLA.MSAFILELOC + "\t does NOT exist or is NOT a directory.");
-			exitRun = true;
-		    }else if(! new File(HLA.MSAFILELOC + File.separator + "hla_nom_g.txt").exists()){
-			System.err.println("hla_nom_g.txt NOT FOUND in " + HLA.MSAFILELOC );
-			System.err.println("Please download hla_nom_g.txt from the same IMGT Release as msa files.");
-			exitRun = true;
-		    }
-		}
-		bams = line.getArgs();
-		
-		if(bams.length <1 || (bams.length == 1 && bams[bams.length - 1].equals("DEBUG1228")))
-		    throw new ParseException("At least 1 bam file is required. See Usage:");
-		else{
-		    if(bams.length > 1 && bams[bams.length - 1].equals("DEBUG1228")){
-			String[] tmpbams = new String[bams.length - 1]; 
-			for(int i=0;i<bams.length-1;i++)
-			    tmpbams[i] = bams[i];
-			bams = tmpbams;
-			HLA.DEBUG = true;
-		    }
-		    
-		    for(String b : bams)
-			if(! new File(b).exists()){
-			    System.err.println("Input bam : " + b + " DOES NOT exist. Please check the bam exists.");
-			    exitRun = true;
+		if (helpcheck.getOptions().length > 0)
+		{
+			HLA.help(options);
+		} else {
+			line = parser.parse(options, args);
+			if (line.hasOption("h")) {
+				HLA.help(options);
 			}
-		}
-		    
+			else {
+				if(line.hasOption("a"))
+				HLA.TYPEADDITIONAL = true;
+
+				HLA.OUTPREFIX = line.getOptionValue("o");
+				String tmploc = line.getOptionValue("d");
+				HLA.MSAFILELOC = tmploc;
+				if(tmploc.endsWith(File.separator))
+				HLA.MSAFILELOC = tmploc.substring(0,tmploc.length()-1);
+				if (! new File(HLA.MSAFILELOC).exists() || ! new File(HLA.MSAFILELOC).isDirectory()) {
+					System.err.println("Given msaDirectory: " + HLA.MSAFILELOC + "\t does NOT exist or is NOT a directory.");
+					exitRun = true;
+				} else if (! new File(HLA.MSAFILELOC + File.separator + "hla_nom_g.txt").exists()) {
+					System.err.println("hla_nom_g.txt NOT FOUND in " + HLA.MSAFILELOC );
+					System.err.println("Please download hla_nom_g.txt from the same IMGT Release as msa files.");
+					exitRun = true;
+				}
+			}
+			bams = line.getArgs();
+			
+			if (bams.length < 1 || (bams.length == 1 && bams[bams.length - 1].equals("DEBUG1228")))
+			{
+				throw new ParseException("At least 1 bam file is required. See Usage:");
+			} else {
+				if (bams.length > 1 && bams[bams.length - 1].equals("DEBUG1228")){
+				String[] tmpbams = new String[bams.length - 1]; 
+				for (int i = 0; i < bams.length - 1; i++)
+					tmpbams[i] = bams[i];
+				bams = tmpbams;
+				HLA.DEBUG = true;
+				}
+				
+				for (String b : bams)
+				if(! new File(b).exists()){
+					System.err.println("Input bam : " + b + " DOES NOT exist. Please check the bam exists.");
+					exitRun = true;
+				}
+			}		
 	    }
 	    if(exitRun)
 		throw new ParseException("Exitting . . .");
-	}catch(ParseException e){
+	} catch(ParseException e) {
 	    System.err.println(e.getMessage());
 	    //System.err.println("Failed to parse command line args. Check usage.");
 	    HLA.help(options);
 	}
 	
+	// List of HLA Genes
 	String[] list = {"A" , "B" , "C" , "DQA1" , "DQB1" , "DRB1"};
 
 	String[] extList = {"A" , "B" , "C" , "DQA1" , "DQB1" , "DRB1", "DOA", "DMA", "DMB"
@@ -530,28 +532,28 @@ public class HLA{
 	//,"DPA1", "DPB1", "DRA",  "DRB4", "F", "G" , "H", "J" ,"K", "L", "V"};
 	//,"DPA1", "DPB1", "DRA", "DRB3", "DRB4", "F", "G" , "H", "J" ,"K", "L", "V"};
 	
-	if(HLA.TYPEADDITIONAL)
-	    list = extList;
+	if (HLA.TYPEADDITIONAL) {
+		list = extList;
+	}
 
 	File[] bamfiles = new File[bams.length];
 
-	for(int i=0;i<bams.length; i++)
+	for (int i = 0; i < bams.length; i++)
 	    bamfiles[i] = new File(bams[i]);
 	
-	//check if <HLA.OUTPREFIX>.result is writable
-	//if not exit.
+	// Check if <HLA.OUTPREFIX>.result is writable
+	// If not exit
 	BufferedWriter resultWriter = null;
-	try{
+	try {
 	    resultWriter = new BufferedWriter(new FileWriter(HLA.OUTPREFIX + ".result"));
-	}catch(IOException ioe){
+	} catch(IOException ioe) {
 	    ioe.printStackTrace();
 	    System.err.println("\n\n>>> CANNOT open output file: " + HLA.OUTPREFIX + ".result <<<\n\n");
 	    HLA.help(options);
 	}
-
 	
 	HLA.log = new LogHandler();
-	for(int i =0; i<args.length;i++)
+	for (int i = 0; i < args.length; i++)
 	    HLA.log.append(" " + args[i]);
 	HLA.log.appendln();
 
@@ -598,7 +600,7 @@ public class HLA{
 	/*printingWeights*/
 	//hla.printWeights();
 	HLA.log.outToFile();
-    	HLA.log.appendln("NEW_NODE_ADDED:\t" + HLA.NEW_NODE_ADDED);
+    HLA.log.appendln("NEW_NODE_ADDED:\t" + HLA.NEW_NODE_ADDED);
 	HLA.log.appendln("HOPPPING:\t" + HLA.HOPPING);
 	HLA.log.appendln("INSERTION_NODE_ADDED:\t" + HLA.INSERTION_NODE_ADDED);
 	HLA.log.appendln("INSERTION_WITH_NO_NEW_NODE:\t" + HLA.INSERTION_WITH_NO_NEW_NODE);

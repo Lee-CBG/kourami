@@ -43,7 +43,8 @@ public class Group{
 		this.groupname = alleleName.substring(alleleName.indexOf("*")+1);
 		this.set.add(groupname);
     }
-    
+	
+	// Processes a gene from a NomG file into groups
     public void process(String line, NomG nomG){
 		String[] tokens = line.split(";");
 		this.hlaGeneName = tokens[0].substring(0, tokens[0].indexOf("*"));

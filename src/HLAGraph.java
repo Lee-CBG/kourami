@@ -13,19 +13,16 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Queue;
 import java.util.LinkedList;
-import java.util.Collection;
 import java.util.Hashtable;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import htsjdk.samtools.SAMRecord;
 import htsjdk.samtools.Cigar;
 import htsjdk.samtools.CigarElement;
 import htsjdk.samtools.CigarOperator;
 
-import org.jgrapht.*;
 import org.jgrapht.graph.*;
 
 public class HLAGraph{

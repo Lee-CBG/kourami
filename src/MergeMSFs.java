@@ -55,12 +55,12 @@ public class MergeMSFs{
 
     
     public MergeMSFs(){
-	this.header = new StringBuffer();
-	this.allele2Sequence = new Hashtable<String, Sequence>();
-	this.orderedAlleles = new ArrayList<String>();
-	this.geneName = null;
-	this.isDRBGene = false;
-	this.drbGeneName = null;
+		this.header = new StringBuffer();
+		this.allele2Sequence = new Hashtable<String, Sequence>();
+		this.orderedAlleles = new ArrayList<String>();
+		this.geneName = null;
+		this.isDRBGene = false;
+		this.drbGeneName = null;
     }
 
     public ArrayList<Sequence> getListOfSequences(){

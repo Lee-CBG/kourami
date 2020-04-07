@@ -29,10 +29,13 @@ public class NomG {
 		try {
 			br = new BufferedReader(new FileReader(nomGFile));
 			while ((curline = br.readLine()) != null) {
+				// Ignore comments starting with #
 				if (curline.charAt(0) != '#') {
 					//System.err.println(curline);
 					Group curgrp = new Group(curline, this);
 					String curhlagn = curgrp.getHLAGeneName();
+					
+					// Sort into groups by gene name
 					ArrayList<Group> groups = this.hlagene2groups.get(curhlagn);
 					if (groups == null) {
 						groups = new ArrayList<Group>();
